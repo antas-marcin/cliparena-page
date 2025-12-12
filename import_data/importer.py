@@ -7,7 +7,7 @@ from weaviate.util import generate_uuid5
 import time
 
 DATASET_NAME="SamoXXX/MV-VDB-photos-small"
-DATASET_SPLIT="sfw"
+DATASET_SPLIT="sfw[:10]"
 COLLECTION_NAME = "ClipArena"
 
 
@@ -48,7 +48,7 @@ def import_dataset(client: weaviate.WeaviateClient):
             Configure.Vectors.multi2vec_clip(
                 name="modernvbert",
                 image_fields=["base64_image"],
-                inference_url="http://m2v-clip-ModernVBERT:8080",
+                inference_url="http://m2v-clip-ModernVBERT-modernvbert-embed:8080",
                 vector_index_config=Configure.VectorIndex.flat(),
                 quantizer=Configure.VectorIndex.Quantizer.rq(bits=1),
             ),
