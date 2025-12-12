@@ -2,6 +2,16 @@
 
 A React TypeScript application for searching and displaying images from a Weaviate database. Features a clean interface with a search bar and 4-column results display.
 
+## How to install
+
+```shell
+uv venv --python 3.13
+source .venv/bin/activate
+uv pip install -r ./import_data/requirements.txt
+```
+
+
+
 ## Features
 
 - **Search Interface**: Text-based search field for querying images
