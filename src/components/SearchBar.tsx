@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './SearchBar.css';
 
 interface SearchBarProps {
@@ -13,11 +13,18 @@ interface SearchBarProps {
 type SearchMode = 'text' | 'image' | 'similar';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, onSimilarMode, onTextMode, onImageMode, isLoading = false }) => {
-  const [mode, setMode] = useState<SearchMode>('text');
+  const [mode, setMode] = useState<SearchMode>('similar');
   const [query, setQuery] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Load predefined images on initial mount when in similar mode
+    if (mode === 'similar') {
+      onSimilarMode();
+    }
+  }, []);
 
   const handleTextSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,11 +119,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, onSi
       <div className="search-mode-toggle">
         <button
           type="button"
-          className={`mode-button ${mode === 'text' ? 'active' : ''}`}
-          onClick={handleTextMode}
+          className={`mode-button ${mode === 'similar' ? 'active' : ''}`}
+          onClick={handleSimilarMode}
           disabled={isLoading}
         >
-          Text Search
+          Find Similar
         </button>
         <button
           type="button"
@@ -128,11 +135,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, onSi
         </button>
         <button
           type="button"
-          className={`mode-button ${mode === 'similar' ? 'active' : ''}`}
-          onClick={handleSimilarMode}
+          className={`mode-button ${mode === 'text' ? 'active' : ''}`}
+          onClick={handleTextMode}
           disabled={isLoading}
         >
-          Find Similar
+          Text Search
         </button>
       </div>
 
