@@ -23,7 +23,7 @@ function App() {
   const [limit, setLimit] = useState(10);
   const [lastSearch, setLastSearch] = useState<LastSearch>(null);
   const [predefinedImages, setPredefinedImages] = useState<ImageResult[]>([]);
-  const [showPredefinedImages, setShowPredefinedImages] = useState(false);
+  const [showPredefinedImages, setShowPredefinedImages] = useState(true);
 
   useEffect(() => {
     const initWeaviate = async () => {
@@ -38,6 +38,30 @@ function App() {
 
     initWeaviate();
   }, []);
+
+  useEffect(() => {
+    // Load predefined images after Weaviate connection is established
+    if (isConnected && showPredefinedImages && predefinedImages.length === 0) {
+      const loadPredefinedImages = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const indexesStr = import.meta.env.VITE_PREDEFINED_IMAGE_INDEXES || '6331,6036,6534,6167';
+          const indexes = indexesStr.split(',').map((idx: string) => parseInt(idx.trim(), 10));
+          console.log('Fetching predefined images with indexes:', indexes);
+          const images = await weaviateService.getImagesByIndexes(indexes);
+          setPredefinedImages(images);
+        } catch (err) {
+          console.error('Failed to fetch predefined images:', err);
+          setError('Failed to load predefined images. Please try again.');
+          setPredefinedImages([]);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      loadPredefinedImages();
+    }
+  }, [isConnected, showPredefinedImages]);
 
   useEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
@@ -133,34 +157,10 @@ function App() {
     setResults(null);
   };
 
-  const handleSimilarMode = async () => {
-    if (!isConnected) {
-      setError('Not connected to Weaviate database');
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
+  const handleSimilarMode = () => {
     setShowPredefinedImages(true);
     setResults(null);
     setLastSearch(null);
-
-    try {
-      // Get predefined image indexes from environment variable
-      const indexesStr = import.meta.env.VITE_PREDEFINED_IMAGE_INDEXES || '6331,6036,6534,6167';
-      const indexes = indexesStr.split(',').map((idx: string) => parseInt(idx.trim(), 10));
-
-      console.log('Fetching predefined images with indexes:', indexes);
-
-      const images = await weaviateService.getImagesByIndexes(indexes);
-      setPredefinedImages(images);
-    } catch (err) {
-      console.error('Failed to fetch predefined images:', err);
-      setError('Failed to load predefined images. Please try again.');
-      setPredefinedImages([]);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleShowMore = async () => {

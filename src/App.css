@@ -228,8 +228,8 @@
 /* Predefined Images Styles */
 .predefined-images-container {
   max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 0.5rem auto 2rem;
+  padding: 1.5rem;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -257,7 +257,7 @@
   text-align: center;
   font-size: 1rem;
   color: #666;
-  margin: 0 0 2rem 0;
+  margin: 0 0 1rem 0;
 }
 
 .app.dark-mode .predefined-images-description {

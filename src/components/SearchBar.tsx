@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import './SearchBar.css';
 
 interface SearchBarProps {
@@ -18,13 +18,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, onSi
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    // Load predefined images on initial mount when in similar mode
-    if (mode === 'similar') {
-      onSimilarMode();
-    }
-  }, []);
 
   const handleTextSubmit = (e: React.FormEvent) => {
     e.preventDefault();
