@@ -4,12 +4,15 @@ import './SearchBar.css';
 interface SearchBarProps {
   onTextSearch: (query: string) => void;
   onImageSearch: (base64Image: string) => void;
+  onSimilarMode: () => void;
+  onTextMode?: () => void;
+  onImageMode?: () => void;
   isLoading?: boolean;
 }
 
-type SearchMode = 'text' | 'image';
+type SearchMode = 'text' | 'image' | 'similar';
 
-const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, isLoading = false }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, onSimilarMode, onTextMode, onImageMode, isLoading = false }) => {
   const [mode, setMode] = useState<SearchMode>('text');
   const [query, setQuery] = useState('');
   const [isDragging, setIsDragging] = useState(false);
@@ -85,13 +88,32 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, isLo
     fileInputRef.current?.click();
   };
 
+  const handleTextMode = () => {
+    setMode('text');
+    if (onTextMode) {
+      onTextMode();
+    }
+  };
+
+  const handleImageMode = () => {
+    setMode('image');
+    if (onImageMode) {
+      onImageMode();
+    }
+  };
+
+  const handleSimilarMode = () => {
+    setMode('similar');
+    onSimilarMode();
+  };
+
   return (
     <div className="search-bar-container">
       <div className="search-mode-toggle">
         <button
           type="button"
           className={`mode-button ${mode === 'text' ? 'active' : ''}`}
-          onClick={() => setMode('text')}
+          onClick={handleTextMode}
           disabled={isLoading}
         >
           Text Search
@@ -99,14 +121,22 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, isLo
         <button
           type="button"
           className={`mode-button ${mode === 'image' ? 'active' : ''}`}
-          onClick={() => setMode('image')}
+          onClick={handleImageMode}
           disabled={isLoading}
         >
           Image Search
         </button>
+        <button
+          type="button"
+          className={`mode-button ${mode === 'similar' ? 'active' : ''}`}
+          onClick={handleSimilarMode}
+          disabled={isLoading}
+        >
+          Find Similar
+        </button>
       </div>
 
-      {mode === 'text' ? (
+      {mode === 'text' && (
         <form onSubmit={handleTextSubmit} className="search-form">
           <input
             type="text"
@@ -120,7 +150,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, isLo
             {isLoading ? 'Searching...' : 'Search'}
           </button>
         </form>
-      ) : (
+      )}
+
+      {mode === 'image' && (
         <div className="image-search-container">
           <div
             className={`drop-zone ${isDragging ? 'dragging' : ''} ${previewImage ? 'has-image' : ''}`}
@@ -151,6 +183,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onTextSearch, onImageSearch, isLo
           />
         </div>
       )}
+
     </div>
   );
 };

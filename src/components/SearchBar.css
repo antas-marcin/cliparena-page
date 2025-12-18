@@ -167,6 +167,21 @@
   color: #666;
 }
 
+.similar-mode-container {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.similar-mode-text {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
+}
+
 /* Dark mode styles */
 .dark-mode .mode-button {
   background-color: #2a2a2a;
@@ -227,4 +242,13 @@
 
 .dark-mode .upload-icon {
   opacity: 0.7;
+}
+
+.dark-mode .similar-mode-container {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.dark-mode .similar-mode-text {
+  color: #ccc;
 }

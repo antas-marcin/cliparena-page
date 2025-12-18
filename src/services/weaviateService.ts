@@ -106,6 +106,52 @@ class WeaviateService {
     }
   }
 
+  async getImagesByIndexes(indexes: number[], className: string = import.meta.env.VITE_WEAVIATE_COLLECTION || 'ClipArena'): Promise<ImageResult[]> {
+    if (!this.client) {
+      throw new Error('Weaviate client not initialized. Call connect() first.');
+    }
+
+    try {
+      console.log(`Fetching images by indexes: ${indexes.join(', ')}`);
+
+      // Fetch all images with the specified indexes
+      const result = await this.client.graphql
+        .get()
+        .withClassName(className)
+        .withWhere({
+          operator: 'Or',
+          operands: indexes.map(index => ({
+            path: ['index'],
+            operator: 'Equal',
+            valueNumber: index
+          }))
+        })
+        .withFields('_additional { id } index base64_image dataset_name')
+        .withLimit(indexes.length)
+        .do();
+
+      console.log('Fetched images by indexes:', result);
+
+      const data = result?.data?.Get?.[className] || [];
+
+      return data.map((item: any) => ({
+        id: item._additional?.id || Math.random().toString(),
+        index: item.index || 0,
+        base64_image: item.base64_image || '',
+        dataset_name: item.dataset_name || '',
+      }));
+    } catch (error: any) {
+      console.error('Failed to fetch images by indexes:', error);
+      if (error?.response) {
+        console.error('Error response:', error.response);
+      }
+      if (error?.message) {
+        console.error('Error message:', error.message);
+      }
+      return [];
+    }
+  }
+
   private async performTextSearch(
     query: string,
     className: string,
@@ -141,12 +187,12 @@ class WeaviateService {
         dataset_name: item.dataset_name || '',
         distance: item._additional?.distance,
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error('Text search query failed for targetVector:', targetVector, error);
-      if (error.response) {
+      if (error?.response) {
         console.error('Error response:', error.response);
       }
-      if (error.message) {
+      if (error?.message) {
         console.error('Error message:', error.message);
       }
       return [];
@@ -188,12 +234,12 @@ class WeaviateService {
         dataset_name: item.dataset_name || '',
         distance: item._additional?.distance,
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error('Image search query failed for targetVector:', targetVector, error);
-      if (error.response) {
+      if (error?.response) {
         console.error('Error response:', error.response);
       }
-      if (error.message) {
+      if (error?.message) {
         console.error('Error message:', error.message);
       }
       return [];
@@ -235,12 +281,12 @@ class WeaviateService {
         dataset_name: item.dataset_name || '',
         distance: item._additional?.distance,
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error('Similar search query failed for targetVector:', targetVector, error);
-      if (error.response) {
+      if (error?.response) {
         console.error('Error response:', error.response);
       }
-      if (error.message) {
+      if (error?.message) {
         console.error('Error message:', error.message);
       }
       return [];
