@@ -43,14 +43,38 @@ function App() {
     // Load predefined images after Weaviate connection is established
     if (isConnected && showPredefinedImages && predefinedImages.length === 0) {
       const loadPredefinedImages = async () => {
+        const indexesStr = import.meta.env.VITE_PREDEFINED_IMAGE_INDEXES || '6331,6036,6534,6167';
+        const cacheKey = `predefinedImages_${indexesStr}`;
+
+        // Try to load from localStorage first
+        try {
+          const cachedData = localStorage.getItem(cacheKey);
+          if (cachedData) {
+            const cached = JSON.parse(cachedData);
+            console.log('Loading predefined images from cache');
+            setPredefinedImages(cached);
+            return;
+          }
+        } catch (err) {
+          console.error('Failed to load from cache:', err);
+        }
+
+        // If not in cache, fetch from Weaviate
         setIsLoading(true);
         setError(null);
         try {
-          const indexesStr = import.meta.env.VITE_PREDEFINED_IMAGE_INDEXES || '6331,6036,6534,6167';
           const indexes = indexesStr.split(',').map((idx: string) => parseInt(idx.trim(), 10));
           console.log('Fetching predefined images with indexes:', indexes);
           const images = await weaviateService.getImagesByIndexes(indexes);
           setPredefinedImages(images);
+
+          // Save to localStorage for future use
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify(images));
+            console.log('Predefined images cached to localStorage');
+          } catch (err) {
+            console.error('Failed to cache images:', err);
+          }
         } catch (err) {
           console.error('Failed to fetch predefined images:', err);
           setError('Failed to load predefined images. Please try again.');
@@ -234,7 +258,7 @@ function App() {
         <div className="predefined-images-container">
           <p className="predefined-images-description">Click "Find Similar" on any image to discover related images</p>
           <div className="predefined-images-grid">
-            {isLoading && !results ? (
+            {isLoading && predefinedImages.length === 0 ? (
               <div className="loading">Loading images...</div>
             ) : predefinedImages.length === 0 ? (
               <div className="no-results">No predefined images found</div>
