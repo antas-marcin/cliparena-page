@@ -286,7 +286,7 @@ function App() {
       )}
 
       {showPredefinedImages ? (
-        <ResultsDisplay results={results} isLoading={isLoading && results !== null} onFindSimilar={handleFindSimilar} />
+        <ResultsDisplay results={results} isLoading={isLoading && predefinedImages.length > 0} onFindSimilar={handleFindSimilar} />
       ) : (
         <ResultsDisplay results={results} isLoading={isLoading} onFindSimilar={handleFindSimilar} />
       )}
