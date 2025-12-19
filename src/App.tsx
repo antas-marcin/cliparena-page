@@ -159,6 +159,9 @@ function App() {
     setLimit(10);
     setLastSearch({ type: 'similar', imageId });
 
+    // Scroll to top to show new results
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     try {
       const searchResults = await weaviateService.searchSimilar(imageId, 10);
       setResults(searchResults);
