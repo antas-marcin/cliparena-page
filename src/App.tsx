@@ -239,6 +239,14 @@ function App() {
         <div className="header-content">
           <img src="/logo.png" alt="CLIP Arena" className="app-logo" />
           <p className="app-tagline">CLIP ARENA - Compare & Evaluate CLIP Models</p>
+          <div className="models-list">
+            <ol>
+              <li><a href="https://huggingface.co/facebook/metaclip-2-worldwide-b32-384" target="_blank" rel="noopener noreferrer">facebook/metaclip-2-worldwide-b32-384</a></li>
+              <li><a href="https://huggingface.co/ModernVBERT/modernvbert-embed" target="_blank" rel="noopener noreferrer">ModernVBERT/modernvbert-embed</a></li>
+              <li><a href="https://github.com/openai/CLIP" target="_blank" rel="noopener noreferrer">OpenCLIP xlm-roberta-base-ViT-B-32 pretrained laion5b_s13b_b90k</a></li>
+              <li><a href="https://huggingface.co/google/siglip2-so400m-patch16-512" target="_blank" rel="noopener noreferrer">google/siglip2-so400m-patch16-512</a></li>
+            </ol>
+          </div>
         </div>
       </header>
 
