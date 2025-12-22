@@ -304,7 +304,7 @@ function App() {
       )}
 
       <footer className="app-footer">
-        Powered by Weaviate
+        Powered by <a href="https://weaviate.io/" target="_blank" rel="noopener noreferrer">Weaviate</a> <img src="https://camo.githubusercontent.com/8c7106fe03397422f714a631faf0130cfee576e9284092f83631b74de37dee43/68747470733a2f2f77656176696174652e696f2f696d672f736974652f77656176696174652d6c6f676f2d6c696768742e706e67" alt="Weaviate" className="weaviate-logo" /><br/>AI Embedding models are running on <a href="https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/" target="_blank" rel="noopener noreferrer">NVIDIA Jetson AGX Orin</a> device
       </footer>
     </div>
   );
