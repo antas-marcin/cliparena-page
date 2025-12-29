@@ -123,7 +123,7 @@
 .no-search {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 3rem;
+  padding: 1rem;
   font-size: 1.25rem;
   color: #666;
 }
